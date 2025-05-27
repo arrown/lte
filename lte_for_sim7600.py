@@ -1,11 +1,13 @@
 import serial
 import os
+import time
 from datetime import datetime
 
 # Configuration
 PORT = "/dev/ttyUSB2"
 BAUDRATE = 115200
 NUM_MEASUREMENTS = 20  # Total measurements
+DELAY = 0.3  # Delay between commands
 
 # Setup log file
 log_dir = "logs"
@@ -13,10 +15,11 @@ os.makedirs(log_dir, exist_ok=True)
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 log_path = os.path.join(log_dir, f"lte_signal_log_{timestamp}.txt")
 
-def send_at_command(ser, command, delay=1.0):
+def send_at_command(ser, command):
+    ser.reset_input_buffer()
     ser.write((command + '\r\n').encode())
     ser.flush()
-    ser.timeout = delay
+    time.sleep(DELAY)
     return ser.read_all().decode(errors="ignore")
 
 def parse_csq(response):
