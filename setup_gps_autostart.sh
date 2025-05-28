@@ -24,13 +24,6 @@ echo -e "AT+CGPS=1,1\r" > /dev/ttyUSB2
 EOF
 sudo chmod +x /usr/local/bin/start_gps_at.sh
 
-### 4. rc.local 자동 실행 설정
-echo "🛠 /etc/rc.local 수정"
-if ! grep -q "start_gps_at.sh" /etc/rc.local; then
-  sudo sed -i '/^exit 0/i /usr/local/bin/start_gps_at.sh' /etc/rc.local
-fi
-sudo chmod +x /etc/rc.local
-
 ### 5. 서비스 재시작
 echo "🔁 서비스 재시작 중..."
 sudo systemctl enable gpsd
